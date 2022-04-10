@@ -24,8 +24,10 @@
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.enp37s0.useDHCP = true;
-  networking.interfaces.wlp3s0f0u7.useDHCP = true;
+  #networking.interfaces.enp37s0.useDHCP = true;
+  #networking.interfaces.wlp3s0f0u7.useDHCP = true;
+
+  nixpkgs.config.allowUnfree = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -38,14 +40,12 @@
   #   keyMap = "us";
   # };
 
-  nixpkgs.config.allowUnfree = true;
-
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
+    
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  # Enable the GNOME Desktop Environment.
+  # Enable the Plasma 5 Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   
@@ -76,28 +76,35 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     firefox
-    terminator
     stow
     git
     google-chrome
     blender
-    gimp inkscape zsh lsd
-spotify
-gnome.gnome-tweaks
-neofetch
-papirus-icon-theme
-rustup
-public-sans
-dejavu_fonts
+    gimp
+    inkscape
+    zsh
+    lsd
+    spotify
+    neofetch
+    rustup
+    public-sans
+    dejavu_fonts
   ];
 
-programs.zsh.enable = true;
-users.defaultUserShell = pkgs.zsh;
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   zramSwap = {
-    enable = true;
-    algorithm = "zstd";
+	enable = true;
+	algorithm = "zstd";
   };
+
+  fonts.fonts = with pkgs; [
+	noto-fonts
+	noto-fonts-emoji
+	fira-code
+	(nerdfonts.override { fonts = [ "FiraCode" ]; })
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -110,17 +117,7 @@ users.defaultUserShell = pkgs.zsh;
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  xdg.portal.enable = true; # only needed if you are not doing Gnome
-  services.flatpak.enable = true;
-
-  fonts.fonts = with pkgs; [
-	noto-fonts
-	noto-fonts-emoji
-	fira-code
-	(nerdfonts.override { fonts = [ "FiraCode" ]; })
-  ];
+  # services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
